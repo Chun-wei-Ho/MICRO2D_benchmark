@@ -21,7 +21,7 @@ if __name__ == "__main__":
     train_dataset, test_dataset = load_train_test("MICRO2D_homogenized.h5")
 
     if args.test:
-        test_loader = DataLoader(test_dataset, batch_size=250, drop_last=False, shuffle=False)
+        test_loader = DataLoader(test_dataset, batch_size=250, drop_last=False, shuffle=False, num_workers=5)
         model = CNNModule.load_from_checkpoint("Experiments/best.ckpt", logger=False)
         tester = L.Trainer(devices=1, accelerator="gpu", logger=False)
         tester.test(model, dataloaders=test_loader)
@@ -40,7 +40,7 @@ if __name__ == "__main__":
         checkpoint_callback = ModelCheckpoint(dirpath="Experiments/checkpoints",
                                                 save_top_k=2,
                                                 mode="min",
-                                                monitor="Valid MAE",
+                                                monitor="Validation MAPE (%)",
                                                 save_last=True)
 
         ## Training
