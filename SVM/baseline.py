@@ -6,6 +6,8 @@ from sklearn.metrics import mean_squared_error
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import time
+from sklearn.metrics import mean_absolute_percentage_error
+from sklearn.metrics import mean_absolute_error
 
 # Set random seeds
 np.random.seed(2024)
@@ -48,39 +50,46 @@ models=[LinearSVR(epsilon=0.0, tol=0.0001, C=1, loss='epsilon_insensitive', rand
         SVR(kernel="rbf", C=100, gamma=0.1, epsilon=0.1)
         ]
 
-i=0
+for i in range(len(models)):
+    print("model",i)
 
-count=1
-svr = models[i]
-train_dataloader = DataLoader(train_dataset, batch_size=1024, drop_last=True, shuffle=True)
-for struct, Ex in train_dataloader:
-    start = time.time()
-    print(count)
-    # Process each batch here
-    struct = struct.numpy()
-    Ex = Ex.numpy()
+    count=1
+    svr = models[i]
+    train_dataloader = DataLoader(train_dataset, batch_size=1024, drop_last=True, shuffle=True)
+    for struct, Ex in train_dataloader:
+        start = time.time()
+        # print(count)
+        # Process each batch here
+        struct = struct.numpy()
+        Ex = Ex.numpy()
 
-    X_train = struct.reshape(struct.shape[0], -1)
-    y_train = Ex
+        X_train = struct.reshape(struct.shape[0], -1)
+        y_train = Ex
 
-    svr.fit(X_train, y_train)
-    count += 1
-    print(time.time()-start,"seconds")
+        svr.fit(X_train, y_train)
+        count += 1
+        # print(time.time()-start,"seconds")
 
 
-test_dataloader = DataLoader(test_dataset, batch_size=1024, drop_last=False, shuffle=False)
+    test_dataloader = DataLoader(test_dataset, batch_size=1024, drop_last=False, shuffle=False)
 
-for struct, Ex in test_dataloader:
-    # Process each batch here
-    start = time.time()
-    struct = struct.numpy()
-    Ex = Ex.numpy()
+    for struct, Ex in test_dataloader:
+        # Process each batch here
+        # start = time.time()
+        struct = struct.numpy()
+        Ex = Ex.numpy()
 
-    X_test = struct.reshape(struct.shape[0], -1)
+        X_test = struct.reshape(struct.shape[0], -1)
 
-    y_test = Ex
-    print(X_test.shape, y_test.shape)
-    pred_test = svr.predict(X_test)
-    mse_test = mean_squared_error(y_test, pred_test)
-    print("Mean Squared Error:", mse_test)
-    print(time.time()-start,"seconds")
+        y_test = Ex
+        # print(X_test.shape, y_test.shape)
+        pred_test = svr.predict(X_test)
+        mse_test = mean_squared_error(y_test, pred_test)
+        print("Mean Squared Error:", mse_test)
+        mape_test = mean_absolute_percentage_error(y_test, pred_test)
+        print("Mean Absolute Percentage Error:", mape_test)
+        mae = mean_absolute_error(y_test, pred_test)
+        print("Mean Absolute Error:", mae)
+        print(time.time()-start,"seconds")
+        
+
