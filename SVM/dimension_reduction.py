@@ -15,13 +15,82 @@ from sklearn.metrics import mean_squared_error
 from torch.utils.data import Dataset
 from torch.utils.data import DataLoader
 import time
+from sklearn.manifold import LocallyLinearEmbedding
+from sklearn.manifold import Isomap
+from sklearn.manifold import TSNE
+import os
+import warnings
+
+# Ignore specific warning by category
+warnings.filterwarnings("ignore", category=UserWarning)
+os.environ["LOKY_MAX_CPU_COUNT"] = "4"
+
 
 # 2PS Cross correlations
 def twopoint(phase1, phase2):
     cross_correlations = np.real(np.fft.ifftn(phase1*np.conj(phase2)) / (phase1.shape[0]*phase2.shape[0]))
     return cross_correlations
 
-def preprocess(structs):
+def preprocess_tsne(structs):
+    TPS = []
+    TPS_flat = []
+
+    # phase 1 is the white phase, phase 2 = black
+    for i in range (0,10000):
+        phase1 = np.fft.fftn(structs[i]==0)
+        phase2 = np.fft.fftn(structs[i]==1)
+        # centering the 2 point correlations, this is where we compute the autocorrelations
+        twopoint_centered = np.fft.fftshift(twopoint(phase2, phase2))
+        TPS.append(twopoint_centered)
+    TPS_flat = np.vstack([arr.flatten() for arr in TPS])
+    # flattened TPS vectors are stacked on top of eachother. Take the mean of each column
+    TPS_mean_subtracted = TPS_flat - np.mean(TPS_flat, axis=0)
+    tsne = TSNE(n_components=2)
+    # Fit t-SNE model and transform the data
+    return  tsne.fit_transform(TPS_mean_subtracted)
+
+
+def preprocess_isomap(structs):
+    TPS = []
+    TPS_flat = []
+
+    # phase 1 is the white phase, phase 2 = black
+    for i in range (0,10000):
+        phase1 = np.fft.fftn(structs[i]==0)
+        phase2 = np.fft.fftn(structs[i]==1)
+        # centering the 2 point correlations, this is where we compute the autocorrelations
+        twopoint_centered = np.fft.fftshift(twopoint(phase2, phase2))
+        TPS.append(twopoint_centered)
+    TPS_flat = np.vstack([arr.flatten() for arr in TPS])
+    # flattened TPS vectors are stacked on top of eachother. Take the mean of each column
+    TPS_mean_subtracted = TPS_flat - np.mean(TPS_flat, axis=0)
+    isomap = Isomap(n_neighbors=30, n_components=2)
+
+    # Fit Isomap model and transform the data
+    return isomap.fit_transform(TPS_mean_subtracted)
+
+
+def preprocess_lle(structs):
+    TPS = []
+    TPS_flat = []
+
+    # phase 1 is the white phase, phase 2 = black
+    for i in range (0,10000):
+        phase1 = np.fft.fftn(structs[i]==0)
+        phase2 = np.fft.fftn(structs[i]==1)
+        # centering the 2 point correlations, this is where we compute the autocorrelations
+        twopoint_centered = np.fft.fftshift(twopoint(phase2, phase2))
+        TPS.append(twopoint_centered)
+    TPS_flat = np.vstack([arr.flatten() for arr in TPS])
+    # flattened TPS vectors are stacked on top of eachother. Take the mean of each column
+    TPS_mean_subtracted = TPS_flat - np.mean(TPS_flat, axis=0)
+    
+    lle = LocallyLinearEmbedding(n_neighbors=30, n_components=2, method='standard')
+    # Fit LLE model and transform the data
+    return lle.fit_transform(TPS_mean_subtracted)
+
+
+def preprocess_pca(structs):
     TPS = []
     TPS_flat = []
 
@@ -52,9 +121,19 @@ def load_train_test(filename):
     np.random.seed(2024)
     permutation = np.random.permutation(Ex.shape[0])
     structs, Ex = structs[permutation], Ex[permutation]
-
-    print("Pre-processing with TPS and PCA")
-    structs = preprocess(structs)
+    
+    # print("Pre-processing with TPS and PCA")
+    # structs = preprocess_pca(structs)
+    
+    
+    # print("Pre-processing with TPS and LLE")
+    # structs = preprocess_lle(structs)
+    
+    # print("Pre-processing with TPS and TSNE")
+    # structs = preprocess_tsne(structs)
+    
+    # print("Pre-processing with TPS and Isomap")
+    # structs = preprocess_isomap(structs)
 
     structs_train, structs_test, Ex_train, Ex_test = structs[:-1000], structs[-1000:], Ex[:-1000], Ex[-1000:]
 
@@ -75,9 +154,6 @@ if __name__ == "__main__":
     start=time.time()
     train_dataset, test_dataset = load_train_test("MICRO2D_homogenized.h5")
     print(time.time()-start)
-    # train_dataloader = DataLoader(train_dataset, batch_size=32, drop_last=True, shuffle=True)
-    # for struct, Ex in train_dataloader:
-    #     print(struct.shape, Ex.shape)
     
     models=[LinearSVR(epsilon=0.0, tol=0.0001, C=1, loss='epsilon_insensitive', random_state=2024),
         LinearSVR(epsilon=0.0, tol=0.0001, C=10, loss='epsilon_insensitive', random_state=2024),
