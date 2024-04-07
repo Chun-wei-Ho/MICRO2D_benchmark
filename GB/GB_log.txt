@@ -1,0 +1,17 @@
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA
+Using Subsample = 0.5
+Start OOB Score Validation
+Training with n_estimators=1000
+Training with n_estimators=2000
+Training with n_estimators=3000
+Training with n_estimators=4000
+Training with n_estimators=5000
+Training with n_estimators=6000
+Training with n_estimators=7000
+Training with n_estimators=8000
+Training with n_estimators=9000
+Training with n_estimators=10000
+n_estimators = 10000
+Lowest OOB Score = 0.3985253605016933
+Mean Absolute Percentage Error (MAPE): 0.031053177436706044
