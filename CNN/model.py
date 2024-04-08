@@ -1,5 +1,7 @@
 import torch
 
+import torchvision
+
 class ResidualCNNblock(torch.nn.Module):
     def __init__(self, nfeatures, kernel=(3, 3)):
         super().__init__()
@@ -39,6 +41,32 @@ class BasicCNN(torch.nn.Module):
         x = self.cnn(x)
         x = x.view(x.shape[0], -1)
         return self.mlp(x)[:, 0]
+
+class ResNet50(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        # weights = torchvision.models.ResNeXt101_64X4D_Weights.DEFAULT
+        weights = torchvision.models.ResNet50_Weights.DEFAULT
+        # self.resnet = torchvision.models.resnext101_64x4d(weights=None)
+        self.resnet = torchvision.models.resnet50(weights=None)
+        self.preprocess = weights.transforms()
+        self.resnet.fc = torch.nn.Linear(2048, 1)
+    def forward(self, x):
+        x = torch.cat([x, x, x], dim=1)
+        x = self.preprocess(x)
+        return self.resnet(x)[:, 0]
+
+class DenseNet201(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        weights = torchvision.models.DenseNet201_Weights.DEFAULT
+        self.densenet = torchvision.models.densenet201(weights=None)
+        self.preprocess = weights.transforms()
+        self.densenet.classifier = torch.nn.Linear(1920, 1)
+    def forward(self, x):
+        x = torch.cat([x, x, x], dim=1)
+        x = self.preprocess(x)
+        return self.densenet(x)[:, 0]
 
 if __name__ == "__main__":
     model = BasicCNN()

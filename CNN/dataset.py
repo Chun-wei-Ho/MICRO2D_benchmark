@@ -1,6 +1,8 @@
 import torch
 from torch.utils.data import Dataset
 
+from torchvision import transforms
+
 import numpy as np
 import h5py
 
@@ -22,10 +24,29 @@ class MICRO2DDataset(Dataset):
     def __init__(self, structs, Ex):
         self.structs = structs
         self.Ex = Ex
+
+        self.transforms = transforms.Compose([
+            transforms.ToTensor(),
+        ])
     def __len__(self):
         return self.Ex.shape[0]
     def __getitem__(self, idx):
-        return self.structs[idx], self.Ex[idx]
+        return self.transforms(self.structs[idx]), self.Ex[idx]
+
+class DataAug(Dataset):
+    def __init__(self, dataset):
+        self.transforms = transforms.Compose([
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomVerticalFlip(p=0.5),
+            # transforms.RandomRotation(degrees=45),
+            # transforms.RandomInvert(p=0.5),
+        ])
+        self.dataset = dataset
+    def __len__(self):
+        return len(self.dataset)
+    def __getitem__(self, idx):
+        structs, Ex = self.dataset[idx]
+        return self.transforms(structs), Ex
 
 if __name__ == "__main__":
     from torch.utils.data import DataLoader
