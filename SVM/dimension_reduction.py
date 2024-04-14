@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 
 import numpy as np
 import h5py
-
+import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.metrics import mean_absolute_percentage_error
 from sklearn.metrics import mean_absolute_error
@@ -122,8 +122,8 @@ def load_train_test(filename):
     permutation = np.random.permutation(Ex.shape[0])
     structs, Ex = structs[permutation], Ex[permutation]
     
-    # print("Pre-processing with TPS and PCA")
-    # structs = preprocess_pca(structs)
+    print("Pre-processing with TPS and PCA")
+    structs = preprocess_pca(structs)
     
     
     # print("Pre-processing with TPS and LLE")
@@ -167,45 +167,68 @@ if __name__ == "__main__":
         SVR(kernel="rbf", C=100, gamma=0.1, epsilon=0.1)
         ]
 
-    for i in range(len(models)):
-        print("model",i)
+    # for i in range(7,len(models)):
+    i=7
+    print("model",i)
 
-        count=1
-        svr = models[i]
-        train_dataloader = DataLoader(train_dataset, batch_size=1024, drop_last=True, shuffle=True)
-        for struct, Ex in train_dataloader:
-            start = time.time()
-            # print(count)
-            # Process each batch here
-            struct = struct.numpy()
-            Ex = Ex.numpy()
+    count=1
+    svr = models[i]
+    train_dataloader = DataLoader(train_dataset, batch_size=1024, drop_last=True, shuffle=True)
+    for struct, Ex in train_dataloader:
+        start = time.time()
+        # print(count)
+        # Process each batch here
+        struct = struct.numpy()
+        Ex = Ex.numpy()
 
-            X_train = struct.reshape(struct.shape[0], -1)
-            y_train = Ex
+        X_train = struct.reshape(struct.shape[0], -1)
+        y_train = Ex
 
-            svr.fit(X_train, y_train)
-            count += 1
+        svr.fit(X_train, y_train)
+        count += 1
+        # print(time.time()-start,"seconds")
+
+
+    test_dataloader = DataLoader(test_dataset, batch_size=1024, drop_last=False, shuffle=False)
+
+    for struct, Ex in test_dataloader:
+        # Process each batch here
+        start = time.time()
+        struct = struct.numpy()
+        Ex = Ex.numpy()
+
+        X_test = struct.reshape(struct.shape[0], -1)
+
+        y_test = Ex
+        # print(X_test.shape, y_test.shape)
+        pred_test = svr.predict(X_test)
+        mse_test = mean_squared_error(y_test, pred_test)
+        print("Mean Squared Error:", mse_test)
+        mape_test = mean_absolute_percentage_error(y_test, pred_test)
+        print("Mean Absolute Percentage Error:", mape_test)
+        mae = mean_absolute_error(y_test, pred_test)
+        print("Mean Absolute Error:", mae)
             # print(time.time()-start,"seconds")
+    # Assuming pred_test and y_test are your predicted and actual values respectively
+    # Calculate the minimum and maximum values for setting axes limits
+    min_val = min(np.min(pred_test), np.min(y_test))
+    max_val = max(np.max(pred_test), np.max(y_test))
 
-
-        test_dataloader = DataLoader(test_dataset, batch_size=1024, drop_last=False, shuffle=False)
-
-        for struct, Ex in test_dataloader:
-            # Process each batch here
-            start = time.time()
-            struct = struct.numpy()
-            Ex = Ex.numpy()
-
-            X_test = struct.reshape(struct.shape[0], -1)
-
-            y_test = Ex
-            # print(X_test.shape, y_test.shape)
-            pred_test = svr.predict(X_test)
-            mse_test = mean_squared_error(y_test, pred_test)
-            print("Mean Squared Error:", mse_test)
-            mape_test = mean_absolute_percentage_error(y_test, pred_test)
-            print("Mean Absolute Percentage Error:", mape_test)
-            mae = mean_absolute_error(y_test, pred_test)
-            print("Mean Absolute Error:", mae)
-            # print(time.time()-start,"seconds")
+    # Plot the parity plot
+    plt.figure(figsize=(8, 8))
+    plt.scatter(y_test, pred_test, color='blue', alpha=0.5)
+    plt.plot([min_val, max_val], [min_val, max_val], color='red', linestyle='--')
+    plt.title('Parity Plot - Test Results')
+    plt.xlabel('Actual Values')
+    plt.ylabel('Predicted Values')
+    plt.axis('equal')
+    plt.grid(True)
+    plt.show()
+    plt.savefig("parity.png")
     print("done")
+    
+    
+    
+    
+
+    
