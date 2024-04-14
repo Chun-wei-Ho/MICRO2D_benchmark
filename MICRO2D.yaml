@@ -142,6 +142,15 @@ dependencies:
   - zlib=1.2.13=h5eee18b_0
   - zstd=1.5.5=hc292b87_0
   - pip:
+      - contourpy==1.2.1
+      - cycler==0.12.1
+      - fonttools==4.51.0
       - h5py==3.10.0
+      - importlib-resources==6.4.0
+      - kiwisolver==1.4.5
+      - matplotlib==3.8.4
       - protobuf==5.26.1
+      - pyparsing==3.1.2
       - tensorboardx==2.6.2.2
+      - zipp==3.18.1
+prefix: /home/chunwei/anaconda3/envs/MICRO2D

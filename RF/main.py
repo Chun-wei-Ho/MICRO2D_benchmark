@@ -20,9 +20,10 @@ if __name__ == "__main__":
     min_estimators = 50
     max_estimators = 500
 
-    print("Validating")
+    print("Start OOB Error Validation")
     error_rate = []
     for i in range(min_estimators, max_estimators + 1, 10):
+        print(f"Training with n_estimators={i}")
         rf.set_params(n_estimators=i)
         rf.fit(train_dataset.structs, train_dataset.Ex)
 
@@ -31,6 +32,7 @@ if __name__ == "__main__":
 
     plt.plot(*zip(*error_rate))
     plt.xlim(min_estimators, max_estimators)
+    plt.title("Random Forest Validation Using Out of Bag Error")
     plt.xlabel("n_estimators")
     plt.ylabel("OOB error rate")
     plt.show()
@@ -49,5 +51,4 @@ if __name__ == "__main__":
 
     y_pred = rf.predict(test_dataset.structs)
 
-    mse = metrics.mean_squared_error(test_dataset.Ex, y_pred)
-    print('Mean Absolute Error (MAE):', metrics.mean_absolute_error(test_dataset.Ex, y_pred))
+    print('Mean Absolute Percentage Error (MAPE):', metrics.mean_absolute_percentage_error(test_dataset.Ex, y_pred))
