@@ -11,7 +11,7 @@ def twopoint(phase1, phase2):
     cross_correlations = np.real(np.fft.ifftn(phase1*np.conj(phase2)) / (phase1.shape[0]*phase2.shape[0]))
     return cross_correlations
 
-def preprocess(structs):
+def preprocess(structs, pca):
     TPS = []
     TPS_flat = []
 
@@ -27,10 +27,11 @@ def preprocess(structs):
     TPS_mean_subtracted = TPS_flat - np.mean(TPS_flat, axis=0)
 
     #PCA
-    pca = PCA(n_components=100)
-    return pca.fit_transform(TPS_mean_subtracted)
+    pca = PCA(n_components=pca)
+    return pca.fit_transform(TPS_mean_subtracted)  
+    
 
-def load_train_test(filename):
+def load_train_test(filename, pca):
     print(f"Loading data from {filename}")
     h5_file = h5py.File(filename,'r')
     structs = np.array(h5_file["GRF/GRF"], dtype=np.float32)
@@ -43,8 +44,9 @@ def load_train_test(filename):
     permutation = np.random.permutation(Ex.shape[0])
     structs, Ex = structs[permutation], Ex[permutation]
 
-    print("Pre-processing with TPS and PCA")
-    structs = preprocess(structs)
+    print(f"Pre-processing with TPS and PCA ({pca} features)")
+    
+    structs = preprocess(structs, pca)
 
     structs_train, structs_test, Ex_train, Ex_test = structs[:-1000], structs[-1000:], Ex[:-1000], Ex[-1000:]
 

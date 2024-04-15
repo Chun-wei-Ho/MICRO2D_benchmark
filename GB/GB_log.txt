@@ -1,6 +1,6 @@
-Loading data from MICRO2D_homogenized.h5
-Pre-processing with TPS and PCA
 Using Subsample = 0.5
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (5 features)
 Start OOB Score Validation
 Training with n_estimators=1000
 Training with n_estimators=2000
@@ -12,6 +12,58 @@ Training with n_estimators=7000
 Training with n_estimators=8000
 Training with n_estimators=9000
 Training with n_estimators=10000
-n_estimators = 10000
-Lowest OOB Score = 0.3985253605016933
+
+Minimum OOB Score: 1290.2037668207797 at 10000 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.09488354715091894
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (25 features)
+Start OOB Score Validation
+Training with n_estimators=1000
+Training with n_estimators=2000
+Training with n_estimators=3000
+Training with n_estimators=4000
+Training with n_estimators=5000
+Training with n_estimators=6000
+Training with n_estimators=7000
+Training with n_estimators=8000
+Training with n_estimators=9000
+Training with n_estimators=10000
+
+Minimum OOB Score: 11.316930467597514 at 10000 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.03478337290957146
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (50 features)
+Start OOB Score Validation
+Training with n_estimators=1000
+Training with n_estimators=2000
+Training with n_estimators=3000
+Training with n_estimators=4000
+Training with n_estimators=5000
+Training with n_estimators=6000
+Training with n_estimators=7000
+Training with n_estimators=8000
+Training with n_estimators=9000
+Training with n_estimators=10000
+
+Minimum OOB Score: 1.8557796807347642 at 10000 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.029758989876708802
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (100 features)
+Start OOB Score Validation
+Training with n_estimators=1000
+Training with n_estimators=2000
+Training with n_estimators=3000
+Training with n_estimators=4000
+Training with n_estimators=5000
+Training with n_estimators=6000
+Training with n_estimators=7000
+Training with n_estimators=8000
+Training with n_estimators=9000
+Training with n_estimators=10000
+
+Minimum OOB Score: 0.3985253605016933 at 10000 estimators
+
 Mean Absolute Percentage Error (MAPE): 0.031053177436706044

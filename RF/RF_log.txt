@@ -1,52 +1,156 @@
 Loading data from MICRO2D_homogenized.h5
-Pre-processing with TPS and PCA
-Start OOB Validation
+Pre-processing with TPS and PCA (5 features)
+Start OOB Error Validation
+Training with n_estimators=25
+/home/tamht/.local/lib/python3.10/site-packages/sklearn/ensemble/_forest.py:615: UserWarning: Some inputs do not have OOB scores. This probably means too few trees were used to compute any reliable OOB estimates.
+  warn(
 Training with n_estimators=50
-Training with n_estimators=60
-Training with n_estimators=70
-Training with n_estimators=80
-Training with n_estimators=90
+Training with n_estimators=75
 Training with n_estimators=100
-Training with n_estimators=110
-Training with n_estimators=120
-Training with n_estimators=130
-Training with n_estimators=140
+Training with n_estimators=125
 Training with n_estimators=150
-Training with n_estimators=160
-Training with n_estimators=170
-Training with n_estimators=180
-Training with n_estimators=190
+Training with n_estimators=175
 Training with n_estimators=200
-Training with n_estimators=210
-Training with n_estimators=220
-Training with n_estimators=230
-Training with n_estimators=240
+Training with n_estimators=225
 Training with n_estimators=250
-Training with n_estimators=260
-Training with n_estimators=270
-Training with n_estimators=280
-Training with n_estimators=290
+Training with n_estimators=275
 Training with n_estimators=300
-Training with n_estimators=310
-Training with n_estimators=320
-Training with n_estimators=330
-Training with n_estimators=340
+Training with n_estimators=325
 Training with n_estimators=350
-Training with n_estimators=360
-Training with n_estimators=370
-Training with n_estimators=380
-Training with n_estimators=390
+Training with n_estimators=375
 Training with n_estimators=400
-Training with n_estimators=410
-Training with n_estimators=420
-Training with n_estimators=430
-Training with n_estimators=440
+Training with n_estimators=425
 Training with n_estimators=450
-Training with n_estimators=460
-Training with n_estimators=470
-Training with n_estimators=480
-Training with n_estimators=490
+Training with n_estimators=475
 Training with n_estimators=500
-n_estimators = 450
-Lowest OOB error = 0.06771501681074898
-Mean Absolute Percentage Error (MAPE): 0.04473574919481699
+Training with n_estimators=525
+Training with n_estimators=550
+Training with n_estimators=575
+Training with n_estimators=600
+Training with n_estimators=625
+Training with n_estimators=650
+Training with n_estimators=675
+Training with n_estimators=700
+Training with n_estimators=725
+Training with n_estimators=750
+
+Minimum OOB Error: 0.2053664323613602 at 750 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.08491517735401177
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (25 features)
+Start OOB Error Validation
+Training with n_estimators=25
+/home/tamht/.local/lib/python3.10/site-packages/sklearn/ensemble/_forest.py:615: UserWarning: Some inputs do not have OOB scores. This probably means too few trees were used to compute any reliable OOB estimates.
+  warn(
+Training with n_estimators=50
+Training with n_estimators=75
+Training with n_estimators=100
+Training with n_estimators=125
+Training with n_estimators=150
+Training with n_estimators=175
+Training with n_estimators=200
+Training with n_estimators=225
+Training with n_estimators=250
+Training with n_estimators=275
+Training with n_estimators=300
+Training with n_estimators=325
+Training with n_estimators=350
+Training with n_estimators=375
+Training with n_estimators=400
+Training with n_estimators=425
+Training with n_estimators=450
+Training with n_estimators=475
+Training with n_estimators=500
+Training with n_estimators=525
+Training with n_estimators=550
+Training with n_estimators=575
+Training with n_estimators=600
+Training with n_estimators=625
+Training with n_estimators=650
+Training with n_estimators=675
+Training with n_estimators=700
+Training with n_estimators=725
+Training with n_estimators=750
+
+Minimum OOB Error: 0.06273782328353394 at 575 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.04242415184343925
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (50 features)
+Start OOB Error Validation
+Training with n_estimators=25
+/home/tamht/.local/lib/python3.10/site-packages/sklearn/ensemble/_forest.py:615: UserWarning: Some inputs do not have OOB scores. This probably means too few trees were used to compute any reliable OOB estimates.
+  warn(
+Training with n_estimators=50
+Training with n_estimators=75
+Training with n_estimators=100
+Training with n_estimators=125
+Training with n_estimators=150
+Training with n_estimators=175
+Training with n_estimators=200
+Training with n_estimators=225
+Training with n_estimators=250
+Training with n_estimators=275
+Training with n_estimators=300
+Training with n_estimators=325
+Training with n_estimators=350
+Training with n_estimators=375
+Training with n_estimators=400
+Training with n_estimators=425
+Training with n_estimators=450
+Training with n_estimators=475
+Training with n_estimators=500
+Training with n_estimators=525
+Training with n_estimators=550
+Training with n_estimators=575
+Training with n_estimators=600
+Training with n_estimators=625
+Training with n_estimators=650
+Training with n_estimators=675
+Training with n_estimators=700
+Training with n_estimators=725
+Training with n_estimators=750
+
+Minimum OOB Error: 0.06169453964562299 at 600 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.042602627670179
+Loading data from MICRO2D_homogenized.h5
+Pre-processing with TPS and PCA (100 features)
+Start OOB Error Validation
+Training with n_estimators=25
+/home/tamht/.local/lib/python3.10/site-packages/sklearn/ensemble/_forest.py:615: UserWarning: Some inputs do not have OOB scores. This probably means too few trees were used to compute any reliable OOB estimates.
+  warn(
+Training with n_estimators=50
+Training with n_estimators=75
+Training with n_estimators=100
+Training with n_estimators=125
+Training with n_estimators=150
+Training with n_estimators=175
+Training with n_estimators=200
+Training with n_estimators=225
+Training with n_estimators=250
+Training with n_estimators=275
+Training with n_estimators=300
+Training with n_estimators=325
+Training with n_estimators=350
+Training with n_estimators=375
+Training with n_estimators=400
+Training with n_estimators=425
+Training with n_estimators=450
+Training with n_estimators=475
+Training with n_estimators=500
+Training with n_estimators=525
+Training with n_estimators=550
+Training with n_estimators=575
+Training with n_estimators=600
+Training with n_estimators=625
+Training with n_estimators=650
+Training with n_estimators=675
+Training with n_estimators=700
+Training with n_estimators=725
+Training with n_estimators=750
+
+Minimum OOB Error: 0.0674286199751365 at 700 estimators
+
+Mean Absolute Percentage Error (MAPE): 0.04468434500099655
