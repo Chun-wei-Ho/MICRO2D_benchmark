@@ -42,6 +42,9 @@ class BasicCNN(torch.nn.Module):
         x = x.view(x.shape[0], -1)
         return self.mlp(x)[:, 0]
 
+class Identity(torch.nn.Module):
+    def forward(self, x): return x
+
 class ResNet50(torch.nn.Module):
     def __init__(self):
         super().__init__()
@@ -50,11 +53,11 @@ class ResNet50(torch.nn.Module):
         # self.resnet = torchvision.models.resnext101_64x4d(weights=None)
         self.resnet = torchvision.models.resnet50(weights=None)
         self.preprocess = weights.transforms()
-        self.resnet.fc = torch.nn.Linear(2048, 1)
+        self.resnet.fc = torch.nn.Linear(2048, 5)
     def forward(self, x):
         x = torch.cat([x, x, x], dim=1)
         x = self.preprocess(x)
-        return self.resnet(x)[:, 0]
+        return self.resnet(x)
 
 class DenseNet201(torch.nn.Module):
     def __init__(self):

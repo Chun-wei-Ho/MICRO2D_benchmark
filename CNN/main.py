@@ -17,6 +17,7 @@ import os
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--test", action="store_true")
+    parser.add_argument("--no-valid", action="store_true")
     parser.add_argument("--exp", default="Experiments")
     args = parser.parse_args()
 
@@ -29,6 +30,21 @@ if __name__ == "__main__":
         model = CNNModule.load_from_checkpoint(os.path.join(args.exp, "best.ckpt"))
         tester = L.Trainer(devices=1, accelerator="gpu", default_root_dir=args.exp, logger=logger)
         tester.test(model, dataloaders=test_loader)
+    elif args.no_valid:
+        torch.manual_seed(2024)
+        model = CNNModule()
+        train_loader = DataLoader(train_dataset, batch_size=32, drop_last=True, shuffle=True, num_workers=5)
+        checkpoint_callback = ModelCheckpoint(dirpath=os.path.join(args.exp, "checkpoints"),
+                                                save_top_k=2,
+                                                mode="min",
+                                                monitor="Train MAPE (%)",
+                                                save_last=True)
+        trainer = L.Trainer(max_epochs=60,
+                            devices=1, accelerator="gpu",
+                            default_root_dir=args.exp,
+                            callbacks=[checkpoint_callback])
+        trainer.fit(model, train_loader)
+        os.rename(checkpoint_callback.best_model_path, os.path.join(args.exp, "best.ckpt"))
     else:
         ## Model
         torch.manual_seed(2024)
@@ -50,7 +66,7 @@ if __name__ == "__main__":
                                                 save_last=True)
 
         ## Training
-        trainer = L.Trainer(max_epochs=30,
+        trainer = L.Trainer(max_epochs=60,
                             devices=1, accelerator="gpu",
                             default_root_dir=args.exp,
                             callbacks=[checkpoint_callback])

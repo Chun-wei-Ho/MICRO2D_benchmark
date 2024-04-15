@@ -12,26 +12,34 @@ def load_train_test(filename):
     structs = np.array(h5_file["GRF/GRF"], dtype=np.float32)
     homogenized_mech = np.array(h5_file["GRF/homogenized_mechanical"], dtype=np.float32)
     Props = homogenized_mech[:, 0]
-    Ex = Props[:, 0]
 
     np.random.seed(2024)
-    permutation = np.random.permutation(Ex.shape[0])
-    structs, Ex = structs[permutation], Ex[permutation]
-    structs_train, structs_test, Ex_train, Ex_test = structs[:-1000], structs[-1000:], Ex[:-1000], Ex[-1000:]
-    return MICRO2DDataset(structs_train, Ex_train), MICRO2DDataset(structs_test, Ex_test)
+    permutation = np.random.permutation(structs.shape[0])
+    structs, Props = structs[permutation], Props[permutation]
+    structs_train, structs_test, Props_train, Props_test = structs[:-1000], structs[-1000:], Props[:-1000], Props[-1000:]
+    return MICRO2DDataset(structs_train, Props_train), MICRO2DDataset(structs_test, Props_test)
 
+def twopoint(phase1):
+    N = phase1.shape[0] * phase1.shape[1]
+    spectral_density = - np.abs(phase1) ** 2
+    cross_correlations = np.real(np.fft.ifftn(spectral_density) + phase1[0, 0]) / N
+    return np.fft.fftshift(cross_correlations)
+ 
 class MICRO2DDataset(Dataset):
-    def __init__(self, structs, Ex):
+    def __init__(self, structs, Props):
         self.structs = structs
-        self.Ex = Ex
+        self.Props = Props
 
         self.transforms = transforms.Compose([
             transforms.ToTensor(),
         ])
     def __len__(self):
-        return self.Ex.shape[0]
+        return self.structs.shape[0]
     def __getitem__(self, idx):
-        return self.transforms(self.structs[idx]), self.Ex[idx]
+        data = self.structs[idx]
+        # TPS = twopoint(np.fft.fftn(data))
+        # data = np.stack([data, TPS], axis=-1)
+        return self.transforms(data), self.Props[idx]
 
 class DataAug(Dataset):
     def __init__(self, dataset):
@@ -45,6 +53,7 @@ class DataAug(Dataset):
     def __len__(self):
         return len(self.dataset)
     def __getitem__(self, idx):
+        # TODO: Data augmentation on TPS
         structs, Ex = self.dataset[idx]
         return self.transforms(structs), Ex
 

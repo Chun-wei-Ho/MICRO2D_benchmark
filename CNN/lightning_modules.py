@@ -15,11 +15,15 @@ class CNNModule(L.LightningModule):
         self.model = ResNet50()
         # self.model = DenseNet201()
         self.loss = MeanAbsolutePercentageError()
-    def training_step(self, batch, batch_idx, mode="Train"):
+    def training_step(self, batch, batch_idx, mode="Train", num_pretrain=0):
         x, y_ref = batch
         y_hyp = self.model(x)
+        if mode != "Train" or self.current_epoch >= num_pretrain:
+            y_ref = y_ref[:, 0]
+            y_hyp = y_hyp[:, 0]
+        prefix = "multi objective " if y_ref.ndim == 2 else ""
         loss = self.loss(y_hyp, y_ref)
-        self.log(f"{mode} MAPE (%)", loss * 100)
+        self.log(f"{mode} {prefix}MAPE (%)", loss * 100)
         return loss
     def validation_step(self, batch, batch_idx):
         return self.training_step(batch, batch_idx, mode="Validation")
@@ -29,6 +33,8 @@ class CNNModule(L.LightningModule):
     def test_step(self, batch, batch_idx):
         x, y_ref = batch
         y_hyp = self.model(x)
+        y_ref = y_ref[:, 0]
+        y_hyp = y_hyp[:, 0]
         self.y_ref.append(y_ref)
         self.y_hyp.append(y_hyp)
     def on_test_epoch_end(self):
